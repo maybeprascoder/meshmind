@@ -203,7 +203,7 @@ python main.py worker
 
 **Prasoon Kumar and Vivek Hegde**
 - GitHub: [@maybeprascoder][@HEGDEVIVEK]
-- LinkedIn:(https://www.linkedin.com/in/prasoon-singh-ty/)(https://www.linkedin.com/in/vivek-s-hegde-2001)
+- LinkedIn:(https://www.linkedin.com/in/prasoon-singh-ty/) (https://www.linkedin.com/in/vivek-s-hegde-2001)
 
 ## 🙏 Acknowledgments
 
