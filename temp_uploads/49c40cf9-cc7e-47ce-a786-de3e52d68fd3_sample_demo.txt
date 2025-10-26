@@ -1,0 +1,10 @@
+
+        This is a sample document about artificial intelligence.
+        
+        Artificial Intelligence (AI) is a branch of computer science that aims to create 
+        machines capable of intelligent behavior. Machine Learning is a subset of AI that 
+        focuses on algorithms that can learn from data.
+        
+        Key AI researchers include Geoffrey Hinton, Yann LeCun, and Andrew Ng.
+        Popular AI frameworks include TensorFlow, PyTorch, and Scikit-learn.
+        
