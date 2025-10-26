@@ -190,6 +190,192 @@ python main.py query
 python main.py worker
 ```
 
+## 🎨 Frontend Integration Guide
+
+### **For UI Developers**
+
+This section provides comprehensive integration details for frontend developers working with the MeshMind RAG system.
+
+#### **Authentication & Session Management**
+- **Clerk Integration**: All user sessions are managed by Clerk
+- **User ID Format**: `user_34ahV0zive4ngGq60o7NeSQw2eu` (Clerk user ID)
+- **Session Handling**: Clerk handles authentication, authorization, and user management
+- **API Headers**: Include `user-id` header with Clerk user ID in all API requests
+
+#### **File Upload Flow**
+1. **User uploads file** through UI
+2. **File gets uploaded** to Amazon S3 bucket (`minidriveai-bucket.s3.us-east-2.amazonaws.com`)
+3. **S3 URL generated** and stored in MongoDB metadata
+4. **File processing** begins automatically
+5. **Status updates** available via API endpoints
+
+#### **MongoDB File Metadata Schema**
+```json
+{
+  "_id": {"$oid": "68fe2196cabd021f0e7cbe0c"},
+  "owner": "user_34ahV0zive4ngGq60o7NeSQw2eu",
+  "filename": "Vivek_Resume.pdf",
+  "mimetype": "application/pdf",
+  "s3Url": "https://minidriveai-bucket.s3.us-east-2.amazonaws.com/3f36750c-8a7f-4998-98d9-30e424d14524-Vivek_Resume.pdf",
+  "s3Key": "3f36750c-8a7f-4998-98d9-30e424d14524-Vivek_Resume.pdf",
+  "uploadedAt": {"$date": {"$numberLong": "1761485206180"}},
+  "geminiFileName": "files/zy4suxgct2h6",
+  "geminiFileUri": "https://generativelanguage.googleapis.com/v1beta/files/zy4suxgct2h6"
+}
+```
+
+#### **Required API Integration**
+
+**1. File Upload Endpoint**
+```javascript
+// POST /upload
+const uploadFile = async (file, userId) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const response = await fetch('/upload', {
+    method: 'POST',
+    headers: {
+      'user-id': userId  // Clerk user ID
+    },
+    body: formData
+  });
+  
+  return response.json();
+};
+```
+
+**2. File Status Check**
+```javascript
+// GET /file/{file_id}/status
+const checkFileStatus = async (fileId, userId) => {
+  const response = await fetch(`/file/${fileId}/status`, {
+    headers: {
+      'user-id': userId
+    }
+  });
+  
+  return response.json();
+};
+```
+
+**3. Document Query**
+```javascript
+// POST /query
+const queryDocument = async (query, fileId, userId) => {
+  const response = await fetch('/query', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'user-id': userId
+    },
+    body: JSON.stringify({
+      query: query,
+      file_id: fileId,
+      use_kg: true
+    })
+  });
+  
+  return response.json();
+};
+```
+
+**4. User Files List**
+```javascript
+// GET /files
+const getUserFiles = async (userId) => {
+  const response = await fetch('/files', {
+    headers: {
+      'user-id': userId
+    }
+  });
+  
+  return response.json();
+};
+```
+
+#### **UI Components Required**
+
+**1. File Upload Component**
+- file upload
+- Progress indicator during upload
+- Error handling for upload failures
+
+**2. File Management Dashboard**
+- List of user's uploaded files
+- File status indicators (Processing, Ready, Error)
+- Delete/remove file functionality
+
+**3. Chat Interface**
+- Chat input field
+- Message history display
+
+
+#### **Integration Checklist**
+
+- [ ] **Clerk Authentication**: Implement Clerk SDK for user management
+- [ ] **S3 Upload**: Configure AWS S3 for file storage
+- [ ] **API Headers**: Include `user-id` header in all requests
+- [ ] **File Validation**: Validate file types and sizes
+- [ ] **Error Handling**: Implement comprehensive error handling
+- [ ] **Loading States**: Add loading indicators for all async operations
+- [ ] **Real-time Updates**: Implement polling for status updates
+- [ ] **Responsive Design**: Ensure mobile compatibility
+- [ ] **Accessibility**: Follow WCAG guidelines
+- [ ] **Testing**: Implement unit and integration tests
+
+#### **Environment Variables for Frontend**
+```env
+# Clerk Configuration
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# API Configuration
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_S3_BUCKET=minidriveai-bucket
+NEXT_PUBLIC_AWS_REGION=us-east-2
+
+# For direct S3 uploads
+NEXT_PUBLIC_AWS_ACCESS_KEY_ID=...
+NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY=...
+```
+
+#### **Sample React Component**
+```jsx
+import { useUser } from '@clerk/nextjs';
+import { useState } from 'react';
+
+const DocumentUpload = () => {
+  const { user } = useUser();
+  const [uploading, setUploading] = useState(false);
+  const [files, setFiles] = useState([]);
+
+  const handleFileUpload = async (file) => {
+    setUploading(true);
+    try {
+      const result = await uploadFile(file, user.id);
+      setFiles(prev => [...prev, result]);
+    } catch (error) {
+      console.error('Upload failed:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div>
+      <input 
+        type="file" 
+        onChange={(e) => handleFileUpload(e.target.files[0])}
+        disabled={uploading}
+      />
+      {uploading && <div>Uploading...</div>}
+      {/* File list and chat interface */}
+    </div>
+  );
+};
+```
+
 ## 🤝 Contributing
 
 1. Fork the repository
