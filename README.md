@@ -38,7 +38,7 @@ MeshMind is a comprehensive RAG system that demonstrates enterprise-grade archit
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/MeshMind-RAG-System.git
+   git clone https://github.com/maybeprascoder/meshmind.git
    cd MeshMind-RAG-System
    ```
 
@@ -198,16 +198,12 @@ python main.py worker
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Author
 
-**Prasoon Kumar**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+**Prasoon Kumar and Vivek Hegde**
+- GitHub: [@maybeprascoder][@HEGDEVIVEK]
+- LinkedIn:(https://www.linkedin.com/in/prasoon-singh-ty/)(https://www.linkedin.com/in/vivek-s-hegde-2001)
 
 ## 🙏 Acknowledgments
 
